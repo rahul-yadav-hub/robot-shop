@@ -1,0 +1,31 @@
+pipeline {
+      agent any
+      environment {
+		DOCKERHUB_CREDENTIALS=credentials('dockerhub')
+	}
+      stages {
+            stage('Build') {
+                  steps {
+                        git 'https://github.com/rahul-yadav-hub/robot-shop.git'
+                        sh 'docker build -t rahulyadav007/mongodb:$BUILD_ID mongo/Dockerfile'
+                  }
+            }
+            stage('Push') {
+                  steps {
+                        sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                        sh 'docker push rahulyadav007/mongodb:$BUILD_ID'
+                  }
+            }
+            stage('Deploy') {
+                  steps {
+                        echo "Deploying in Staging Area"
+                        sh 'kubectl get nodes'
+                  }
+            }
+      }
+      post {
+		always {
+			sh 'docker logout'
+		}
+	}
+}

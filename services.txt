@@ -1,0 +1,40 @@
+Services in robot shop:-
+----------------------------------------------------------------------------------------
+Services |   Dockerfile |  Depends_On |                             CI/CD-Pipeline
+----------------------------------------------------------------------------------------
+mongodb         Yes                                                    Required
+
+redis           No                                                        No
+
+rabbitmq        No                                                        No
+
+mysql           Yes                                                    Required
+
+catalogue       Yes         mongodb                                    Required
+
+user            Yes         mongodb, redis                             Required
+
+cart            Yes
+
+shipping        Yes         Mysql
+
+ratings                     Mysql
+
+payment                     rabbitmq
+
+dispatch                    rabbitmq
+
+web                         catalogue, user, shipping, payment
+
+------------------------------------------------------------------------------------------------
+
+
+Seed Job will create pipeline for each job.
+-------------------------------------------------------------------
+Pipeline:      Build     Push      Deploy
+------------------------------------------------------------------
+mysql
+
+mongodb
+
+catalogue
