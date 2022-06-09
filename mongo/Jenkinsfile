@@ -7,7 +7,7 @@ pipeline {
             stage('Build') {
                   steps {
                         git 'https://github.com/rahul-yadav-hub/robot-shop.git'
-                        sh 'docker build -t rahulyadav007/mongodb:$BUILD_ID mongo/Dockerfile'
+                        sh 'docker build -t rahulyadav007/mongodb:$BUILD_ID mongo/'
                   }
             }
             stage('Push') {
