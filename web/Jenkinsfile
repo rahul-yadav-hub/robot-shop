@@ -1,0 +1,32 @@
+pipeline {
+      agent any
+      // environment {
+	// 	DOCKERHUB_CREDENTIALS=credentials('dockerhub')
+	// }
+      stages {
+            stage('Build') {
+                  steps {
+                        git 'https://github.com/rahul-yadav-hub/robot-shop.git'
+                        sh 'docker build -t rahul-robot-shop/web:$BUILD_ID web/'
+                  }
+            }
+            stage('Push') {
+                  steps {
+                        sh 'aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 421320058418.dkr.ecr.ap-south-1.amazonaws.com'
+                        sh 'docker tag rahul-robot-shop/web:$BUILD_ID 421320058418.dkr.ecr.ap-south-1.amazonaws.com/rahul-robot-shop:web-$BUILD_ID'
+                        sh 'docker push 421320058418.dkr.ecr.ap-south-1.amazonaws.com/rahul-robot-shop:web-$BUILD_ID'
+                  }
+            }
+            stage('Deploy') {
+                  steps {
+                        echo "Deploying in Staging Area"
+                        sh 'kubectl get nodes'
+                  }
+            }
+      }
+      post {
+		always {
+			sh 'docker logout'
+		}
+	}
+}
