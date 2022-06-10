@@ -1,8 +1,5 @@
 pipeline {
       agent any
-      environment {
-		DOCKERHUB_CREDENTIALS=credentials('dockerhub')
-	}
       stages {
             stage('Build') {
                   when { changeset "*/mongo/**"} //Will execute this steps if any file change inside the mongo directory
@@ -12,6 +9,7 @@ pipeline {
                   }
             }
             stage('Push') {
+                  when { changeset "*/mongo/**"}
                   steps {
                         sh 'aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 421320058418.dkr.ecr.ap-south-1.amazonaws.com'
                         sh 'docker tag rahul-robot-shop/mongodb:$BUILD_ID 421320058418.dkr.ecr.ap-south-1.amazonaws.com/rahul-robot-shop:mongo-$BUILD_ID'
@@ -19,6 +17,7 @@ pipeline {
                   }
             }
             stage('Deploy') {
+                  when { changeset "*/mongo/**"}
                   steps {
                         echo "Deploying in Staging Area"
                         sh 'kubectl get nodes'
