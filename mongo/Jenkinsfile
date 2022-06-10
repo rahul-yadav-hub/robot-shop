@@ -2,7 +2,7 @@ pipeline {
       agent any
       stages {
             stage('Build') {
-                  //when { changeset "*/mongo/**"} //Will execute this steps if any file change inside the mongo directory.
+                  //when { changeset "*/mongo/**"} //Will execute this steps if any file change inside the mongo directory..
                   steps {
                         git 'https://github.com/rahul-yadav-hub/robot-shop.git'
                         sh 'docker build -t rahul-robot-shop/mongodb:$BUILD_ID mongo/'
